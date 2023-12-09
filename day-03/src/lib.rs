@@ -10,34 +10,30 @@ pub fn eval_neighbour(idx: usize, char_type: CharType, previous: &Option<Chars>,
 }
 
 pub fn process_part1(input: &str) -> u32 {
-    let mut previous_line: &str = "";
-    let mut next_line: &str = "";
-    let lines = input
+    let lines: Vec<Vec<char>>  = input
         .split("\n")
-        .collect::<Vec<&str>>();
-    let mut previous_line: Option<Chars> = None;
-    let mut next_line: Option<Chars> = Some(lines[1].chars());
+        .map(|line| line.chars().collect())
+        .collect();
+    println!("{:?}", lines);
+    let mut previous_line: Option<&Vec<char>> = None;
+    let mut next_line: Option<&Vec<char>> = Some(&lines[0]);
     let line_length = lines[0].len();
     let line_sum = 0;
     for i in 0..lines.len() {
         println!("{}",i);
         println!("{:?}", previous_line);
-        let current_line = lines[i].chars();
-        println!("{:?}", current_line);
+        println!("{:?}", lines[i]);
         println!("{:?}", next_line);
 
 
         if i >= lines.len() - 2 {
             next_line = None;
         } else {
-            next_line = Some(lines[i+2].chars());
+            next_line = Some(&lines[i+2]);
         }
-        previous_line = Some(current_line);
+        previous_line = Some(&lines[i]);
         println!("----------");
-
     }
-
-
     32
 }
 
