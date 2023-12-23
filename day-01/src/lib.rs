@@ -1,4 +1,4 @@
-pub fn get_first_char(mut line_chars: Vec<char>) -> char {
+pub fn get_first_char(line_chars: Vec<char>) -> char {
     let mut iter = line_chars.iter();
     while let Some(c) = iter.next() {
         if c.is_numeric() {
