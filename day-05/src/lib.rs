@@ -4,7 +4,7 @@ pub fn map_element(s: &str, seed: i64) -> i64 {
             .split(' ')
             .map(|val| val.parse::<i64>().unwrap()).collect::<Vec<i64>>() ;
     if let [dest, source, range] = *elem_vec.as_slice() {
-        if seed > source && seed < source + range {
+        if seed >= source && seed < source + range {
             return  seed - source + dest;
         } else {
             return seed;
@@ -13,28 +13,39 @@ pub fn map_element(s: &str, seed: i64) -> i64 {
     unreachable!()
 }
 
+
 pub fn process_part1(input: &str) -> i64 {
-    let (mut seeds, mapper) = input.split_once("\n\n").expect("Incorect seeds format");
+    let (seeds, mapper) = input.split_once("\n\n").expect("Incorect seeds format");
     let (_, seeds) = seeds.split_once(" ").unwrap();
-    let seeds = seeds
+    let mut seeds = seeds
             .split(' ')
             .map(|val| val.parse::<i64>().unwrap()).collect::<Vec<i64>>() ;
     let maps = mapper.split("\n\n").collect::<Vec<&str>>();
+    let flow = maps.iter().map(|to_mapper|
+         {
+            let (_, lines) = to_mapper.split_once("\n").unwrap();
+            lines.split("\n").collect::<Vec<&str>>()
+         }).collect::<Vec<Vec<&str>>>();
     let mut min = i64::MAX;
-    for mut seed in seeds {
-        maps.iter().for_each(|line| {
-            let (_, mut lines) = line.split_once("\n").unwrap();
-            let lines = lines.split("\n").collect::<Vec<&str>>();
-            for line in lines{
-                seed = map_element(line, seed);
+    // let mut seeds: Vec<i64> = vec![79];
+    for seed in seeds.iter_mut() {
+        for to_mapper in flow.iter() {
+            let mut mapping: Vec<i64> = Vec::new();
+            for line in to_mapper.iter() {
+                mapping.push(map_element(line, *seed));
             }
-        });
-        if seed < min {
-            min = seed;
+            for element in mapping {
+                if element != *seed {
+                    *seed = element;
+                    break;
+                }
+            }
         }
-    }
+        if *seed < min {
+            min = *seed;
+        }
+        };
     min
-
 }
 
 #[cfg(test)]
