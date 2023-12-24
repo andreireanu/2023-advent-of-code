@@ -1,6 +1,6 @@
 use std::fs;
-use day_05::process_part1;
-use day_05::process_part2;
+use day_06::process_part1;
+use day_06::process_part2;
 
 fn main() {
     let file = fs::read_to_string("./input.txt").unwrap();

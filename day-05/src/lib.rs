@@ -27,7 +27,6 @@ pub fn process_part1(input: &str) -> i64 {
             lines.split("\n").collect::<Vec<&str>>()
          }).collect::<Vec<Vec<&str>>>();
     let mut min = i64::MAX;
-    // let mut seeds: Vec<i64> = vec![79];
     for seed in seeds.iter_mut() {
         for to_mapper in flow.iter() {
             let mut mapping: Vec<i64> = Vec::new();
@@ -47,6 +46,42 @@ pub fn process_part1(input: &str) -> i64 {
         };
     min
 }
+
+pub fn process_part2(input: &str) -> i64 {
+    let (seeds, mapper) = input.split_once("\n\n").expect("Incorect seeds format");
+    let (_, seeds) = seeds.split_once(" ").unwrap();
+    let mut seeds = seeds
+        .split(' ')
+        .map(|val| val.parse::<i64>().unwrap()).collect::<Vec<i64>>() ;
+    seeds = (seeds[0]..seeds[0]+seeds[1]).chain(seeds[2]..seeds[2]+seeds[3]).collect::<Vec<i64>>();
+    let maps = mapper.split("\n\n").collect::<Vec<&str>>();
+    let flow = maps.iter().map(|to_mapper|
+        {
+            let (_, lines) = to_mapper.split_once("\n").unwrap();
+            lines.split("\n").collect::<Vec<&str>>()
+        }).collect::<Vec<Vec<&str>>>();
+    let mut min = i64::MAX;
+    for seed in seeds.iter_mut() {
+        for to_mapper in flow.iter() {
+            let mut mapping: Vec<i64> = Vec::new();
+            for line in to_mapper.iter() {
+                mapping.push(map_element(line, *seed));
+            }
+            for element in mapping {
+                if element != *seed {
+                    *seed = element;
+                    break;
+                }
+            }
+        }
+        if *seed < min {
+            min = *seed;
+        }
+    };
+    min
+}
+
+
 
 #[cfg(test)]
 mod tests {
