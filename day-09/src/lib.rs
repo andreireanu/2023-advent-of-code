@@ -1,11 +1,8 @@
 pub fn calculate_next(mut v: Vec<i64>) -> i64 {
     let len = v.len();
     for j in 1..len {
-        let current_sum = &v[1..len].iter().sum::<i64>();
-        if *current_sum != 0 {
-            for i in 0..len -j {
-                v[i] = v[i+1] - v[i];
-            }
+        for i in 0..len - j {
+            v[i] = v[i+1] - v[i];
         }
     }
     v.iter().sum::<i64>()
@@ -19,6 +16,19 @@ pub fn process_part1(input: &str) -> i64 {
                 .split(' ')
                 .map(|value| value.parse().unwrap())
                 .collect::<Vec<i64>>();
+            calculate_next(v)
+        }).sum()
+}
+
+pub fn process_part2(input: &str) -> i64 {
+    input
+        .split("\n")
+        .map(|line| {
+            let mut v = line
+                .split(' ')
+                .map(|value| value.parse().unwrap())
+                .collect::<Vec<i64>>();
+            v.reverse();
             calculate_next(v)
         }).sum()
 }
